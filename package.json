@@ -1,7 +1,7 @@
 {
-  "name": "FoodCarft",
+  "name": "FoodCraft",
   "version": "1.0.0",
-  "description": "FoodCarft is online food ordering service where people can order their meal and restaurant owner can sell their food thorough out this website",
+  "description": "FoodCraft is online food ordering service where people can order their meal and restaurant owner can sell their food thorough out this website",
   "main": "./src/index.ts",
   "scripts": {
     "start": "nodemon",

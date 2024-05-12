@@ -9,10 +9,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  name: String,
-  city: String,
-  country: String,
+  name: { type: String },
+  city: { type: String },
+  country: { type: String },
 });
 
 const User = mongoose.model("User", userSchema);
+
 export default User;

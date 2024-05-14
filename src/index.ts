@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import myUserRoute from "./routes/myUserRoute";
+
 require("dotenv").config();
 
 const app = express();
@@ -10,7 +11,6 @@ const port = process.env.PORT;
 app.use(cors());
 app.use(express.json());
 
-//connect mongoose
 mongoose
   .connect(process.env.MONGO_DB_CONNECTION_STRING as string)
   .then(() => {
@@ -21,10 +21,6 @@ mongoose
   );
 
 // API
-app.get("/", (req: Request, res: Response) => {
-  return res.send("Your api working");
-});
-
 app.use("/api/my/user", myUserRoute);
 
 app.listen(port, () => {

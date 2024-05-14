@@ -1,15 +1,11 @@
 import { Request, Response } from "express";
 import User from "../models/user";
 
+// Create a user
 const createCurrentUser = async (req: Request, res: Response) => {
   // 1. First check if the user is exist or not
-
   try {
     const { auth0Id } = req.body;
-
-    console.log("Your auth id is :");
-
-    console.log(auth0Id);
 
     //Check in the database is the user is already exist or not
     const existingUser = await User.findOne({ auth0Id });
@@ -33,6 +29,22 @@ const createCurrentUser = async (req: Request, res: Response) => {
   }
 };
 
+//Update user information
+const updateCurrentUser = async (req: Request, res: Response) => {
+  try {
+    const { name, addressLine1, country, city } = req.body;
+
+    
+
+
+  } catch (error) {
+    return res.status(500).json({
+      message: "Failed to update information",
+    });
+  }
+};
+
 export default {
   createCurrentUser,
+  updateCurrentUser,
 };

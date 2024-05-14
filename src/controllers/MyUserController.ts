@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, response } from "express";
 import User from "../models/user";
 
 // Create a user
@@ -32,12 +32,32 @@ const createCurrentUser = async (req: Request, res: Response) => {
 //Update user information
 const updateCurrentUser = async (req: Request, res: Response) => {
   try {
+    //Get the data from the request body
     const { name, addressLine1, country, city } = req.body;
 
-    
+    //find the user in the database
 
+    const user = await User.findById(req.userId);
 
+    //If user not found
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    user.name = name;
+    user.addressLine1 = addressLine1;
+    user.city = city;
+    user.country = country;
+
+    //Update and save the data to db
+    await user.save();
+    //send response data
+    res.send(user);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: "Failed to update information",
     });

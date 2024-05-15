@@ -6,7 +6,7 @@ const getCurrentUser = async (req: Request, res: Response) => {
   try {
     const currentUser = await User.findOne({ _id: req.userId });
 
-    if (currentUser) {
+    if (!currentUser) {
       return res.status(401).json({
         message: "Unauthorized Access ! User not found",
       });

@@ -20,7 +20,13 @@ mongoose
     console.log("Database connection failed :" + error.message)
   );
 
-// API
+// APIs
+app.get("/health", async (req: Request, res: Response) => {
+  res.send({
+    message: "Health Ok !",
+  });
+});
+
 app.use("/api/my/user", myUserRoute);
 
 app.listen(port, () => {

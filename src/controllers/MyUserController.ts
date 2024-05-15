@@ -1,6 +1,25 @@
 import { Request, Response, response } from "express";
 import User from "../models/user";
 
+//Get the current user data
+const getCurrentUser = async (req: Request, res: Response) => {
+  try {
+    const currentUser = await User.findOne({ _id: req.userId });
+
+    if (currentUser) {
+      return res.status(401).json({
+        message: "Unauthorized Access ! User not found",
+      });
+    }
+
+    return res.status(201).json(currentUser);
+  } catch (error) {
+    return res.status(401).json({
+      message: "Something went wrong to get the current user data",
+    });
+  }
+};
+
 // Create a user
 const createCurrentUser = async (req: Request, res: Response) => {
   // 1. First check if the user is exist or not
@@ -67,4 +86,5 @@ const updateCurrentUser = async (req: Request, res: Response) => {
 export default {
   createCurrentUser,
   updateCurrentUser,
+  getCurrentUser,
 };

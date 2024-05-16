@@ -2,15 +2,20 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import myUserRoute from "./routes/myUserRoute";
+import multer from "multer";
+import { v2 as cloudinary } from 'cloudinary';
+
 
 require("dotenv").config();
 
 const app = express();
 const port = process.env.PORT;
 
+//Global Middleware
 app.use(cors());
 app.use(express.json());
 
+//Database connection
 mongoose
   .connect(process.env.MONGO_DB_CONNECTION_STRING as string)
   .then(() => {
@@ -19,6 +24,14 @@ mongoose
   .catch((error) =>
     console.log("Database connection failed :" + error.message)
   );
+
+//Cloudinary Connection
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 
 // APIs
 app.get("/health", async (req: Request, res: Response) => {

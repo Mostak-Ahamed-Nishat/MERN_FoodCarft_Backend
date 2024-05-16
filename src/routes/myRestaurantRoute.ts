@@ -1,5 +1,6 @@
 import express from "express";
 import multer from "multer";
+import MyRestaurantController from "../controllers/MyRestaurantController";
 const router = express.Router();
 
 const storage = multer.memoryStorage();
@@ -13,8 +14,8 @@ const upload = multer({
 //Create a restaurant
 router.post(
   "/",
-  upload.single("imageFile")
-  //   MyRestaurantController.createMyRestaurant
+  upload.single("imageFile"),
+  MyRestaurantController.createMyRestaurant
 );
 
 export default router;

@@ -3,6 +3,7 @@ import { auth } from "express-oauth2-jwt-bearer";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
 
+
 require("dotenv").config();
 
 //Define a global variable type

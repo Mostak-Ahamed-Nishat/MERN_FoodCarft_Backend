@@ -13,6 +13,9 @@ const upload = multer({
   },
 });
 
+//get the restaurant
+router.get("/", jwtCheck, jwtParse, MyRestaurantController.getMyRestaurant);
+
 //Create a restaurant
 router.post(
   "/",

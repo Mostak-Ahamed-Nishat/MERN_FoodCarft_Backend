@@ -3,6 +3,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import myUserRoute from "./routes/myUserRoute";
 import myRestaurantRoute from "./routes/myRestaurantRoute";
+import restaurantRoute from "./routes/restaurantRoute";
 import { v2 as cloudinary } from "cloudinary";
 require("dotenv").config();
 
@@ -41,7 +42,8 @@ app.get("/health", async (req: Request, res: Response) => {
 app.use("/api/my/user", myUserRoute);
 //Restaurant API
 app.use("/api/my/restaurant", myRestaurantRoute);
-
+//Restaurant API
+app.use("/api/restaurant", restaurantRoute);
 
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);

@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import Stripe from "stripe";
-
 import Restaurant, { MenuItemType } from "../models/Restaurant";
 // require("dotenv").config();
 
@@ -23,6 +22,9 @@ type CheckoutSessionRequest = {
   restaurantId: string;
 };
 
+//*********Get the order details
+
+//*********Create an order
 const createCheckoutSession = async (req: Request, res: Response) => {
   try {
     //Get the data from body

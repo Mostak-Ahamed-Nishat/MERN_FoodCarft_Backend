@@ -4,7 +4,11 @@ import mongoose from "mongoose";
 import myUserRoute from "./routes/myUserRoute";
 import myRestaurantRoute from "./routes/myRestaurantRoute";
 import restaurantRoute from "./routes/restaurantRoute";
+import orderRoute from "./routes/orderRoute";
+
+
 import { v2 as cloudinary } from "cloudinary";
+
 require("dotenv").config();
 
 const app = express();
@@ -44,6 +48,8 @@ app.use("/api/my/user", myUserRoute);
 app.use("/api/my/restaurant", myRestaurantRoute);
 //Restaurant API
 app.use("/api/restaurant", restaurantRoute);
+//Order API
+app.use("/api/order", orderRoute);
 
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);

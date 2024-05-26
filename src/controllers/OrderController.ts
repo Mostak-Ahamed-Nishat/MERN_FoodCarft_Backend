@@ -4,6 +4,8 @@ import Restaurant, { MenuItemType } from "../models/Restaurant";
 import Order from "../models/Order";
 // require("dotenv").config();
 
+const STRIPE_ENDPOINT_SECRET = process.env.STRIPE_WEBHOOK_SECRET as string;
+
 const stripe = new Stripe(process.env.STRIPE_API_KEY as string);
 
 const FRONTEND_URL = process.env.FRONTEND_URL_REDIRECT_AFTER_PAYMENT_SUCCESS;
@@ -25,13 +27,37 @@ type CheckoutSessionRequest = {
 
 //*********Get the Stripe WebHook
 const stripeWebhookHandler = async (req: Request, res: Response) => {
-  console.log("Receive Event");
-  console.log("<=============>");
-  console.log(req.body);
-  res.send();
+  let event;
+  try {
+    const sig = req.headers["stripe-signature"];
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig as string,
+      STRIPE_ENDPOINT_SECRET
+    );
+
+    if (event.type === "checkout.session.completed") {
+      //If the order successfully completed and paid then find the order id
+      const order = await Order.findById(event.data.object.metadata?.orderId);
+
+      if (!order) {
+        return res.status(404).json({
+          message: "Order not found",
+        });
+      }
+
+      //Add the data to order schema
+      order.totalAmount = event.data.object.amount_total;
+      order.status = "paid";
+
+      await order.save();
+    }
+
+    res.status(200).send();
+  } catch (error: any) {
+    res.status(400).send(`WebHook Error: ${error.message}`);
+  }
 };
-
-
 
 //*********Create an order
 const createCheckoutSession = async (req: Request, res: Response) => {

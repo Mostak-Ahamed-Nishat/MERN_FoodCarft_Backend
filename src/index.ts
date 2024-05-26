@@ -6,7 +6,6 @@ import myRestaurantRoute from "./routes/myRestaurantRoute";
 import restaurantRoute from "./routes/restaurantRoute";
 import orderRoute from "./routes/orderRoute";
 
-
 import { v2 as cloudinary } from "cloudinary";
 
 require("dotenv").config();
@@ -16,7 +15,13 @@ const port = process.env.PORT;
 
 //Global Middleware
 app.use(cors());
+
+//***Order is important before express.json() middleware  */
+app.use("/api/order/checkout/webhook", express.raw({ type: "*/*" }));
+
+//***Order is important after  express.raw() middleware  */
 app.use(express.json());
+
 
 //*****Database connection*****
 mongoose
@@ -50,7 +55,6 @@ app.use("/api/my/restaurant", myRestaurantRoute);
 app.use("/api/restaurant", restaurantRoute);
 //Order API
 app.use("/api/order", orderRoute);
-
 
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);

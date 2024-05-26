@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Stripe from "stripe";
 import Restaurant, { MenuItemType } from "../models/Restaurant";
+import Order from "../models/Order";
 // require("dotenv").config();
 
 const stripe = new Stripe(process.env.STRIPE_API_KEY as string);
@@ -22,7 +23,15 @@ type CheckoutSessionRequest = {
   restaurantId: string;
 };
 
-//*********Get the order details
+//*********Get the Stripe WebHook
+const stripeWebhookHandler = async (req: Request, res: Response) => {
+  console.log("Receive Event");
+  console.log("<=============>");
+  console.log(req.body);
+  res.send();
+};
+
+
 
 //*********Create an order
 const createCheckoutSession = async (req: Request, res: Response) => {
@@ -46,13 +55,26 @@ const createCheckoutSession = async (req: Request, res: Response) => {
       restaurant.menuItems
     );
 
+    //Send the data to order model
+    const newOrder = new Order({
+      restaurant: restaurant,
+      user: req.userId,
+      status: "placed",
+      deliveryDetails: checkoutSessionRequest.deliveryDetails,
+      cartItems: checkoutSessionRequest.cartItems,
+      createdAt: new Date(),
+    });
+
     //Send data to stripe
     const session = await createSession(
       lineItems,
-      "Test_Order_id",
+      newOrder._id.toString(),
       restaurant.deliveryPrice,
       restaurant._id.toString()
     );
+
+    //Save the order now at DB
+    await newOrder.save();
 
     if (!session.url) {
       return res.status(500).json({
@@ -180,4 +202,5 @@ const createSession = async (
 
 export default {
   createCheckoutSession,
+  stripeWebhookHandler,
 };

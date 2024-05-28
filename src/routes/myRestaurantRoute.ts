@@ -16,6 +16,14 @@ const upload = multer({
 //get the restaurant
 router.get("/", jwtCheck, jwtParse, MyRestaurantController.getMyRestaurant);
 
+//manage customer order
+router.get(
+  "/orders",
+  jwtCheck,
+  jwtParse,
+  MyRestaurantController.getMyRestaurantOrders
+);
+
 //Create a restaurant
 router.post(
   "/",

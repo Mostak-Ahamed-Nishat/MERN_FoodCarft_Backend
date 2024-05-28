@@ -4,6 +4,9 @@ import OrderController from "../controllers/OrderController";
 
 const router = express.Router();
 
+//Get the order details after order food
+router.get("/", jwtCheck, jwtParse, OrderController.getMyOrder);
+
 //create Checkout
 router.post(
   "/checkout/create-checkout-session",
@@ -12,10 +15,7 @@ router.post(
   OrderController.createCheckoutSession
 );
 
-//Check webhook 
-router.post(
-  "/checkout/webhook",
-  OrderController.stripeWebhookHandler
-);
+//Check webhook
+router.post("/checkout/webhook", OrderController.stripeWebhookHandler);
 
 export default router;

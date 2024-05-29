@@ -105,6 +105,48 @@ const getMyRestaurantOrders = async (req: Request, res: Response) => {
     });
   }
 };
+
+//Update order status
+const updateOrderStatus = async (req: Request, res: Response) => {
+  try {
+    const { orderId } = req.params;
+    const { status } = req.body;
+
+    //Get the order from the db
+    const order = await Order.findById(orderId);
+
+    //If order not found
+    if (!order) {
+      return res.status(404).json({
+        message: "Order not found",
+      });
+    }
+
+    console.log({
+      order,
+      status,
+    });
+
+    //Find the restaurant and update the restaurant status
+    const restaurant = await Restaurant.findById(order.restaurant);
+
+    if (restaurant?.user?._id.toString() !== req.userId) {
+      return res.status(401).send();
+    }
+
+    order.status = status;
+    await order.save();
+
+    return res.status(200).json(order);
+  } catch (error) {
+    console.log("Error occurring here");
+    console.log(error);
+    return res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+};
+
 //Upload image
 const uploadImage = async (file: Express.Multer.File) => {
   const image = file;
@@ -116,8 +158,9 @@ const uploadImage = async (file: Express.Multer.File) => {
 };
 
 export default {
-  getMyRestaurantOrders,
   createMyRestaurant,
   getMyRestaurant,
   updateMyRestaurant,
+  getMyRestaurantOrders,
+  updateOrderStatus,
 };

@@ -31,7 +31,8 @@ const getMyOrder = async (req: Request, res: Response) => {
     //get all the order that the current user ordered
     const orders = await Order.find({ user: req.userId })
       .populate("restaurant")
-      .populate("user");
+      .populate("user")
+      .sort({ createdAt: -1 });
 
     return res.status(200).json(orders);
   } catch (error) {
@@ -246,5 +247,5 @@ const createSession = async (
 export default {
   createCheckoutSession,
   stripeWebhookHandler,
-  getMyOrder
+  getMyOrder,
 };
